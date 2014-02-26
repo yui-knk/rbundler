@@ -2,6 +2,7 @@
 #' @param name the name of the package to create
 #' @param title the title of the package to create
 #' @param dependencies a data.frame with dependency type, package, compare, version set.
+#' @param sources a data.frame with source package, type, uri, and branch (optional).
 #' @export
 #' @examples
 #'
@@ -12,7 +13,7 @@
 #' description <- create_package_description(name, title, dependencies)
 #'
 #' write(description, file='') # Write the output to the console
-create_package_description <- function(name, title, dependencies) {
+create_package_description <- function(name, title, dependencies, sources = data.frame()) {
   header <- sprintf("Package: %s
 Title: %s
 License: GPL-2
@@ -28,15 +29,23 @@ Version: 0.1",
     ''
 ")
 
-  if(nrow(dependencies) == 0) {
-    sprintf("%s\n%s", header, footer)
-  } else {
-    sprintf("%s\n%s\n%s",
-      header,
-      dependency_clauses(dependencies),
-      footer
+  output <- sprintf("%s", header)
+  
+  if(nrow(dependencies) != 0) {
+      output <- sprintf("%s\n%s",
+      output,
+      dependency_clauses(dependencies)
     )
   }
+
+  if(nrow(sources) != 0) {
+      output <- sprintf("%s\n%s",
+      output,
+      source_clauses(sources)
+    )
+  }
+  
+  sprintf("%s\n%s", output, footer)
 }
 
 #' Creates the `Depends:` clause by concatenating individual packages and adding their compare clauses.
@@ -63,4 +72,24 @@ dependency_clauses <- function(dependencies) {
 
   paste(clauses, collapse='\n')
 
+}
+
+#' Creates the `Sources:` clause by concatenating individual packages and adding their source clauses.
+#' @param sources a data.frame with source package, type, uri, and optional branch set.
+source_clauses <- function(sources) {
+
+  if (!('branch' %in% names(sources)) ) {
+    sources$branch <- ''
+  }
+  
+  sprintf("Sources:\n%s",
+    paste(
+      ifelse(
+        sources$branch == '',
+        sprintf('    %s (%s=%s)', sources$package, sources$type, sources$uri),
+        sprintf('    %s (%s=%s, branch=%s)', sources$package, sources$type, sources$uri, sources$branch)
+      ),
+      collapse=',\n'
+    )
+  )
 }

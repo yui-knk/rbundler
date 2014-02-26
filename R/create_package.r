@@ -2,6 +2,7 @@
 #' @param name the package name
 #' @param title the package title
 #' @param dependencies a data.frame of package dependencies, including the package names, comparators, and versions
+#' @param sources a data.frame with source package, type, uri, and branch (optional).
 #' @param path the path in which to create the package. Defaults to the current path
 #' @return the package, as constructed using the `devtools` `as.package` function
 #' @export
@@ -9,8 +10,8 @@
 #' # Create a simple package with no dependencies:
 #' path <- tempdir()
 #' name <- 'simplepackage'
-#' package <- create_package(name, 'A simple mock package', data.frame(), path)
-create_package <- function(name, title, dependencies, path = '.') {
+#' package <- create_package(name, 'A simple mock package', data.frame(), path = path)
+create_package <- function(name, title, dependencies, sources = data.frame(), path = '.') {
 
   full_path <- file.path(path, name)
 
@@ -19,7 +20,8 @@ create_package <- function(name, title, dependencies, path = '.') {
   }
 
   dir.create(full_path)
-  description <- create_package_description(name, title, dependencies)
+  description <- create_package_description(name, title, dependencies, sources)
+
   write(description, file=file.path(full_path, 'DESCRIPTION'))
 
   as.package(full_path)

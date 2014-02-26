@@ -13,6 +13,7 @@
 #' @param dependencies which package dependencies to install. Defaults to c("Depends", "Imports", "LinkingTo", "Suggests")
 #' @importFrom devtools install
 #' @importFrom devtools as.package
+#' @importFrom devtools parse_deps
 #' @export
 #' @examples
 #'\dontrun{
@@ -45,24 +46,20 @@ bundle <- function(pkg = '.', bundle_path = file.path(pkg, '.Rbundle'), overwrit
   update_current_environment(lib = bundle_path, r_libs_user = r_libs_user)
 
   message("Bundling package ", package$path, " dependencies into library ", bundle_path)
-
+  
   if (!is.null(package$depends)) {
 
     depends <- devtools::parse_deps(package$depends)
-
+    
+    sources <- parse_sources(package$sources)
+    
     if(nrow(depends) > 0) {
       apply(
         depends,
         1,
-        FUN = function(d) {
-          install_version(
-            d['name'], d['version'], d['compare'],
-            dependencies = dependencies
-          )
-        }
+        FUN = function(package) { install_from_repos_or_sources(package, dependencies, sources) }
       )
     }
-
   }
 
   install(pkg)
@@ -109,4 +106,3 @@ update_renviron_file <- function(path, r_libs_user) {
   invisible()
 
 }
-

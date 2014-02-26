@@ -51,3 +51,31 @@ Collate:
     expect_equal(actual, expected)
   }
 )
+
+test_that('we can create a simple package description with sourced dependencies',
+  {
+  expected <- "Package: sourceddependency
+Title: A mock package with a sourced dependency.
+License: GPL-2
+Description:
+Author: Foo Bar <foo.bar@gmail.com>
+Maintainer: Foo Bar <foo.bar@gmail.com>
+Version: 0.1
+Depends:
+    foo
+Suggests:
+    bar (== 1)
+Sources:
+    foo (git=git://github.com/bar/foo.git, branch=baz),
+    bar (url=http://my.package.repo.com/foo.tar.gz)
+Collate:
+    ''
+"
+    name <- 'sourceddependency'
+    title <- 'A mock package with a sourced dependency.'
+    dependencies <- data.frame(type = c('Depends', 'Suggests'), package=c('foo', 'bar'), compare=c(NA, '=='), version=c(NA, '1'))
+    sources <- data.frame(package=c('foo', 'bar'), type=c('git', 'url'), uri=c('git://github.com/bar/foo.git', 'http://my.package.repo.com/foo.tar.gz'), branch=c('baz', ''))
+    actual <- create_package_description(name=name, title=title, dependencies=dependencies, sources=sources)
+    expect_equal(actual, expected)
+  }
+)
