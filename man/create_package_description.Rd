@@ -2,7 +2,7 @@
 \alias{create_package_description}
 \title{A Utility function for creating rbundler scenarios.}
 \usage{
-create_package_description(name, title, dependencies)
+create_package_description(name, title, dependencies, sources = data.frame())
 }
 \arguments{
   \item{name}{the name of the package to create}
@@ -11,6 +11,9 @@ create_package_description(name, title, dependencies)
 
   \item{dependencies}{a data.frame with dependency type,
   package, compare, version set.}
+
+  \item{sources}{a data.frame with source package, type,
+  uri, and branch (optional).}
 }
 \description{
 A Utility function for creating rbundler scenarios.

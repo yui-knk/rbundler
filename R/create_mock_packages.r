@@ -29,9 +29,42 @@ create_mock_packages <- function(path, dependency, repos=getOption('repos')) {
       title='A mock package for testing that a package with versioned dependencies can be bundled.',
       dependencies=data.frame(type=c('Depends'), package=c(dependency$name), compare=c('=='), version=c(dependency$version)),
       path=path
+    ),
+    gitdependencies = create_package(
+      name='gitdependencies',
+      title='A mock package for testing that a package with git sources can be bundled.',
+      dependencies=data.frame(type=c('Depends'), package=c(dependency$name), compare=c(NA), version=c(NA)),
+      # TODO Don't hard code the URI!
+      sources=data.frame(package=c(dependency$name), type=c('git'), uri=c('https://github.com/christophsax/tempdisagg.git')),
+      path=path
+    ),
+    gitbranchdependencies = create_package(
+      name='gitbranchdependencies',
+      title='A mock package for testing that a package with git branch sources can be bundled.',
+      dependencies=data.frame(type=c('Depends'), package=c(dependency$name), compare=c(NA), version=c(NA)),
+      # TODO Don't hard code the URI!
+      sources=data.frame(package=c(dependency$name), type=c('git'), uri=c('https://github.com/christophsax/tempdisagg.git'), branch=c('development')),
+      path=path
+    ),
+    urldependencies = create_package(
+      name='urldependencies',
+      title='A mock package for testing that a package with git sources can be bundled.',
+      dependencies=data.frame(type=c('Depends'), package=c(dependency$name), compare=c(NA), version=c(NA)),
+      # TODO Don't hard code the URI!
+      sources=data.frame(package=c(dependency$name), type=c('url'), 
+        uri=c('http://cran.r-project.org/src/contrib/tempdisagg_0.23.tar.gz')),
+      path=path
+    ),
+    filedependencies = create_package(
+      name='filedependencies',
+      title='A mock package for testing that a package with git sources can be bundled.',
+      dependencies=data.frame(type=c('Depends'), package=c(dependency$name), compare=c(NA), version=c(NA)),
+      # TODO Don't hard code the URI!
+      sources=data.frame(package=c(dependency$name), type=c('file'), 
+        uri=c(file.path(path, 'lib/tempdisagg_0.23.tar.gz'))),
+      path=path
     )
   )
-
 }
 
 #' Creates a mock dependency - corresponding to a real package - for use in testing and experimentation.

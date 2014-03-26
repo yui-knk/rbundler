@@ -2,7 +2,8 @@
 \alias{create_package}
 \title{Creates a package matching the given description and dependencies.}
 \usage{
-create_package(name, title, dependencies, path = ".")
+create_package(name, title, dependencies, sources = data.frame(),
+  path = ".")
 }
 \arguments{
   \item{name}{the package name}
@@ -11,6 +12,9 @@ create_package(name, title, dependencies, path = ".")
 
   \item{dependencies}{a data.frame of package dependencies,
   including the package names, comparators, and versions}
+
+  \item{sources}{a data.frame with source package, type,
+  uri, and branch (optional).}
 
   \item{path}{the path in which to create the package.
   Defaults to the current path}
@@ -27,6 +31,6 @@ dependencies.
 # Create a simple package with no dependencies:
 path <- tempdir()
 name <- 'simplepackage'
-package <- create_package(name, 'A simple mock package', data.frame(), path)
+package <- create_package(name, 'A simple mock package', data.frame(), path = path)
 }
 
