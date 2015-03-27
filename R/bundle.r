@@ -90,7 +90,7 @@ update_current_environment <- function(lib, r_libs_user) {
   .libPaths(c(lib, .libPaths()))
 
   message("R_LIBS_USER=", r_libs_user)
-  message(paste(.libPaths(), collapse="\n"))
+  message(".libPaths() =", paste(.libPaths(), collapse="\n"))
 
   invisible()
 
